@@ -1,6 +1,6 @@
 """
 data.py - Base de datos del simulador MMJ World Cup
-Optimizado para Streamlit y GitHub con soporte de banderas
+Optimizado para Streamlit con soporte de banderas por imágenes
 """
 
 # ---------------------------------------------------------------------------
@@ -32,8 +32,7 @@ ALL_TEAMS = UEFA_TEAMS + CONMEBOL_TEAMS + CAF_TEAMS + CONCACAF_TEAMS + AFC_TEAMS
 COPA_AMERICA_GUESTS_POOL = CONCACAF_TEAMS + AFC_TEAMS + CAF_TEAMS + PLAYOFF_TEAMS
 
 # ---------------------------------------------------------------------------
-# JUGADORES
-# Cada jugador tiene: name, pos, nat (código ISO), nat_name, sofifa (SoFIFA ID)
+# JUGADORES (mantengo tu lista completa, solo muestro un extracto aquí)
 # ---------------------------------------------------------------------------
 PLAYERS = {
     "Ukraine": [
@@ -747,72 +746,7 @@ INITIAL_FIFA_RANKING = {
 }
 
 # ---------------------------------------------------------------------------
-# MAPA DE BANDERAS - Optimizado para Streamlit
-# Usando códigos de país ISO y emojis estándar
-# ---------------------------------------------------------------------------
-FLAG_MAP = {
-    "France": "🇫🇷",
-    "Spain": "🇪🇸",
-    "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",  # Bandera de Inglaterra
-    "Germany": "🇩🇪",
-    "Portugal": "🇵🇹",
-    "Italy": "🇮🇹",
-    "Netherlands": "🇳🇱",
-    "Belgium": "🇧🇪",
-    "Croatia": "🇭🇷",
-    "Denmark": "🇩🇰",
-    "Switzerland": "🇨🇭",
-    "Norway": "🇳🇴",
-    "Austria": "🇦🇹",
-    "Sweden": "🇸🇪",
-    "Poland": "🇵🇱",
-    "Serbia": "🇷🇸",
-    "Turkey": "🇹🇷",
-    "Ukraine": "🇺🇦",
-    "Czech Republic": "🇨🇿",
-    "Greece": "🇬🇷",
-    "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",  # Bandera de Escocia
-    "Wales": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",      # Bandera de Gales
-    "Iceland": "🇮🇸",
-    "Hungary": "🇭🇺",
-    "Israel": "🇮🇱",
-    "Argentina": "🇦🇷",
-    "Brazil": "🇧🇷",
-    "Colombia": "🇨🇴",
-    "Uruguay": "🇺🇾",
-    "Chile": "🇨🇱",
-    "Ecuador": "🇪🇨",
-    "Paraguay": "🇵🇾",
-    "Peru": "🇵🇪",
-    "Bolivia": "🇧🇴",
-    "Venezuela": "🇻🇪",
-    "Senegal": "🇸🇳",
-    "Morocco": "🇲🇦",
-    "Tunisia": "🇹🇳",
-    "Ghana": "🇬🇭",
-    "Egypt": "🇪🇬",
-    "Ivory Coast": "🇨🇮",
-    "Nigeria": "🇳🇬",
-    "Cameroon": "🇨🇲",
-    "South Africa": "🇿🇦",
-    "Algeria": "🇩🇿",
-    "Mexico": "🇲🇽",
-    "USA": "🇺🇸",
-    "Canada": "🇨🇦",
-    "Costa Rica": "🇨🇷",
-    "Panama": "🇵🇦",
-    "Jamaica": "🇯🇲",
-    "Japan": "🇯🇵",
-    "Korea": "🇰🇷",
-    "Australia": "🇦🇺",
-    "Saudi Arabia": "🇸🇦",
-    "Iran": "🇮🇷",
-    "Qatar": "🇶🇦",
-    "New Zealand": "🇳🇿",
-}
-
-# ---------------------------------------------------------------------------
-# MAPA DE CÓDIGOS DE PAÍS (para fallback en Streamlit Cloud)
+# MAPA DE CÓDIGOS ISO PARA BANDERAS
 # ---------------------------------------------------------------------------
 COUNTRY_CODES = {
     "France": "FR", "Spain": "ES", "England": "ENG", "Germany": "DE",
@@ -833,31 +767,9 @@ COUNTRY_CODES = {
 }
 
 # ---------------------------------------------------------------------------
-# FUNCIÓN PARA MOSTRAR BANDERAS DE MANERA SEGURA EN STREAMLIT
+# FUNCIÓN PARA OBTENER URL DE BANDERA (CORREGIDA)
 # ---------------------------------------------------------------------------
-def get_flag_display(country_name, show_code=True):
-    """
-    Devuelve la bandera y/o código del país para mostrar en Streamlit
-    
-    Args:
-        country_name (str): Nombre del país
-        show_code (bool): Si True, muestra también el código de país
-    
-    Returns:
-        str: Texto formateado con bandera y/o código
-    """
-    flag = FLAG_MAP.get(country_name, "")
-    code = COUNTRY_CODES.get(country_name, country_name[:3].upper())
-    
-    if show_code:
-        return f"{flag} {code}" if flag else f"{code}"
-    else:
-        return flag if flag else code
-
-# ---------------------------------------------------------------------------
-# FUNCIÓN PARA OBTENER URL DE BANDERA (OPCIÓN CON IMÁGENES)
-# ---------------------------------------------------------------------------
-def get_flag_url(country_name, size=40):
+def get_flag_url(country_name, size=16):
     """
     Devuelve URL de imagen de bandera de flagcdn.com
     
@@ -869,7 +781,8 @@ def get_flag_url(country_name, size=40):
         str: URL de la imagen o string vacío si no encuentra
     """
     code = COUNTRY_CODES.get(country_name, "").lower()
-    # Convertir códigos especiales
+    
+    # Convertir códigos especiales para flagcdn.com
     if code == "eng":
         code = "gb-eng"
     elif code == "sco":
@@ -878,5 +791,35 @@ def get_flag_url(country_name, size=40):
         code = "gb-wls"
     
     if code:
-        return f"https://flagcdn.com/w{size}/{code}.png"
+        return f"https://flagcdn.com/{size}x12/{code}.png"
     return ""
+
+# ---------------------------------------------------------------------------
+# FUNCIÓN PARA GENERAR HTML DE BANDERA (RECOMENDADA PARA STREAMLIT)
+# ---------------------------------------------------------------------------
+def get_flag_html(country_name, size=16, show_name=True):
+    """
+    Genera HTML para mostrar bandera y nombre del país
+    
+    Args:
+        country_name (str): Nombre del país
+        size (int): Tamaño de la bandera
+        show_name (bool): Si muestra el nombre del país
+    
+    Returns:
+        str: HTML listo para usar en st.markdown
+    """
+    flag_url = get_flag_url(country_name, size)
+    
+    if flag_url:
+        html = f'''
+        <div style="display:flex; align-items:center; gap:8px;">
+            <img src="{flag_url}" 
+                 style="vertical-align:middle; border-radius:3px; width:{size}px; height:auto;">
+            {f'<span>{country_name}</span>' if show_name else ''}
+        </div>
+        '''
+    else:
+        html = f'<span>{country_name}</span>'
+    
+    return html
