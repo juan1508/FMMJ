@@ -2154,7 +2154,7 @@ elif page == "\U0001F465 Plantillas":
             sections_html = ""
             num = 1
             for grp_pos in pos_order:
-                grp = [p for p in players if p["position"] == grp_pos]
+                grp = [p for p in players if p["pos"] == grp_pos]
                 if not grp:
                     continue
                 gc = POS_COLOR.get(grp_pos, "#aaa")
@@ -2164,7 +2164,7 @@ elif page == "\U0001F465 Plantillas":
                 sections_html += "<div class='player-grid'>"
                 for p in grp:
                     name = p["name"]
-                    pos  = p["position"]
+                    pos  = p["pos"]
                     sofifa_url = f"https://sofifa.com/players?keyword={name.replace(' ', '+')}"
                     sections_html += (
                         f"<div class='player-card pos-{pos}-card'>"
@@ -2183,7 +2183,7 @@ elif page == "\U0001F465 Plantillas":
             num = 1
             for p in filtered:
                 name = p["name"]
-                pos  = p["position"]
+                pos  = p["pos"]
                 sofifa_url = f"https://sofifa.com/players?keyword={name.replace(' ', '+')}"
                 cards_html += (
                     f"<div class='player-card pos-{pos}-card'>"
