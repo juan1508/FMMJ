@@ -1,24 +1,29 @@
 """
 data.py - Base de datos del simulador MMJ World Cup
-Flags para England/Scotland/Wales usan secuencias escapadas para evitar
-caracteres bidireccionales ocultos (warning de GitHub).
+Optimizado para Streamlit y GitHub con soporte de banderas
 """
 
+# ---------------------------------------------------------------------------
+# LISTAS DE EQUIPOS POR CONFEDERACIÓN
+# ---------------------------------------------------------------------------
 UEFA_TEAMS = [
     "Switzerland", "Denmark", "Poland", "Austria", "Croatia",
     "Sweden", "Serbia", "Wales", "Scotland", "Belgium",
     "Ukraine", "Czech Republic", "Iceland", "Greece", "Turkey",
     "Norway", "Netherlands", "France", "Spain", "Portugal",
-    "Italy", "England", "Germany", "Hungary",
+    "Italy", "England", "Germany", "Hungary", "Israel"
 ]
+
 CONMEBOL_TEAMS = [
     "Brazil", "Argentina", "Colombia", "Chile", "Peru",
     "Uruguay", "Venezuela", "Bolivia", "Paraguay", "Ecuador",
 ]
+
 CAF_TEAMS = [
     "South Africa", "Morocco", "Tunisia", "Ghana", "Senegal",
     "Egypt", "Ivory Coast", "Cameroon", "Nigeria", "Algeria",
 ]
+
 CONCACAF_TEAMS = ["Mexico", "Panama", "Costa Rica", "USA", "Canada", "Jamaica"]
 AFC_TEAMS = ["Korea", "Saudi Arabia", "Japan", "Australia", "Iran", "Qatar"]
 PLAYOFF_TEAMS = ["New Zealand"]
@@ -717,6 +722,9 @@ PLAYERS = {
     ],
 }
 
+# ---------------------------------------------------------------------------
+# RANKING INICIAL FIFA
+# ---------------------------------------------------------------------------
 INITIAL_FIFA_RANKING = {
     "France": 1840, "Spain": 1810, "England": 1780, "Germany": 1750,
     "Portugal": 1720, "Italy": 1690, "Netherlands": 1650, "Belgium": 1620,
@@ -724,6 +732,7 @@ INITIAL_FIFA_RANKING = {
     "Austria": 1450, "Sweden": 1420, "Poland": 1390, "Serbia": 1360,
     "Turkey": 1330, "Ukraine": 1310, "Czech Republic": 1280, "Greece": 1250,
     "Scotland": 1220, "Wales": 1200, "Iceland": 1150, "Hungary": 1180,
+    "Israel": 1200,
     "Argentina": 1870, "Brazil": 1830, "Colombia": 1650, "Uruguay": 1620,
     "Chile": 1540, "Ecuador": 1510, "Paraguay": 1430, "Peru": 1380,
     "Bolivia": 1250, "Venezuela": 1230,
@@ -735,70 +744,139 @@ INITIAL_FIFA_RANKING = {
     "Japan": 1560, "Korea": 1530, "Australia": 1470, "Saudi Arabia": 1420,
     "Iran": 1440, "Qatar": 1370,
     "New Zealand": 1100,
-    "Israel": 1200,
 }
 
 # ---------------------------------------------------------------------------
-# FLAG MAP  -- England/Scotland/Wales usan \\U escape para evitar el warning
-# de GitHub sobre "bidirectional or hidden Unicode characters".
+# MAPA DE BANDERAS - Optimizado para Streamlit
+# Usando códigos de país ISO y emojis estándar
 # ---------------------------------------------------------------------------
 FLAG_MAP = {
-    "France":         "\U0001F1EB\U0001F1F7",     # FR
-    "Spain":          "\U0001F1EA\U0001F1F8",     # ES
-    "England":        "\U0001F3F4\U000E0067\U000E0062\U000E0065\U000E006E\U000E0067\U000E007F",  # ENG
-    "Germany":        "\U0001F1E9\U0001F1EA",     # DE
-    "Portugal":       "\U0001F1F5\U0001F1F9",     # PT
-    "Italy":          "\U0001F1EE\U0001F1F9",     # IT
-    "Netherlands":    "\U0001F1F3\U0001F1F1",     # NL
-    "Belgium":        "\U0001F1E7\U0001F1EA",     # BE
-    "Croatia":        "\U0001F1ED\U0001F1F7",     # HR
-    "Denmark":        "\U0001F1E9\U0001F1F0",     # DK
-    "Switzerland":    "\U0001F1E8\U0001F1ED",     # CH
-    "Norway":         "\U0001F1F3\U0001F1F4",     # NO
-    "Austria":        "\U0001F1E6\U0001F1F9",     # AT
-    "Sweden":         "\U0001F1F8\U0001F1EA",     # SE
-    "Poland":         "\U0001F1F5\U0001F1F1",     # PL
-    "Serbia":         "\U0001F1F7\U0001F1F8",     # RS
-    "Turkey":         "\U0001F1F9\U0001F1F7",     # TR
-    "Ukraine":        "\U0001F1FA\U0001F1E6",     # UA
-    "Czech Republic": "\U0001F1E8\U0001F1FF",     # CZ
-    "Greece":         "\U0001F1EC\U0001F1F7",     # GR
-    "Scotland":       "\U0001F3F4\U000E0067\U000E0062\U000E0073\U000E0063\U000E0074\U000E007F",  # SCO
-    "Wales":          "\U0001F3F4\U000E0067\U000E0062\U000E0077\U000E006C\U000E0073\U000E007F",  # WAL
-    "Iceland":        "\U0001F1EE\U0001F1F8",     # IS
-    "Hungary":        "\U0001F1ED\U0001F1FA",     # HU
-    "Israel":         "\U0001F1EE\U0001F1F1",     # IL
-    "Argentina":      "\U0001F1E6\U0001F1F7",     # AR
-    "Brazil":         "\U0001F1E7\U0001F1F7",     # BR
-    "Colombia":       "\U0001F1E8\U0001F1F4",     # CO
-    "Uruguay":        "\U0001F1FA\U0001F1FE",     # UY
-    "Chile":          "\U0001F1E8\U0001F1F1",     # CL
-    "Ecuador":        "\U0001F1EA\U0001F1E8",     # EC
-    "Paraguay":       "\U0001F1F5\U0001F1FE",     # PY
-    "Peru":           "\U0001F1F5\U0001F1EA",     # PE
-    "Bolivia":        "\U0001F1E7\U0001F1F4",     # BO
-    "Venezuela":      "\U0001F1FB\U0001F1EA",     # VE
-    "Senegal":        "\U0001F1F8\U0001F1F3",     # SN
-    "Morocco":        "\U0001F1F2\U0001F1E6",     # MA
-    "Tunisia":        "\U0001F1F9\U0001F1F3",     # TN
-    "Ghana":          "\U0001F1EC\U0001F1ED",     # GH
-    "Egypt":          "\U0001F1EA\U0001F1EC",     # EG
-    "Ivory Coast":    "\U0001F1E8\U0001F1EE",     # CI
-    "Nigeria":        "\U0001F1F3\U0001F1EC",     # NG
-    "Cameroon":       "\U0001F1E8\U0001F1F2",     # CM
-    "South Africa":   "\U0001F1FF\U0001F1E6",     # ZA
-    "Algeria":        "\U0001F1E9\U0001F1FF",     # DZ
-    "Mexico":         "\U0001F1F2\U0001F1FD",     # MX
-    "USA":            "\U0001F1FA\U0001F1F8",     # US
-    "Canada":         "\U0001F1E8\U0001F1E6",     # CA
-    "Costa Rica":     "\U0001F1E8\U0001F1F7",     # CR
-    "Panama":         "\U0001F1F5\U0001F1E6",     # PA
-    "Jamaica":        "\U0001F1EF\U0001F1F2",     # JM
-    "Japan":          "\U0001F1EF\U0001F1F5",     # JP
-    "Korea":          "\U0001F1F0\U0001F1F7",     # KR
-    "Australia":      "\U0001F1E6\U0001F1FA",     # AU
-    "Saudi Arabia":   "\U0001F1F8\U0001F1E6",     # SA
-    "Iran":           "\U0001F1EE\U0001F1F7",     # IR
-    "Qatar":          "\U0001F1F6\U0001F1E6",     # QA
-    "New Zealand":    "\U0001F1F3\U0001F1FF",     # NZ
+    "France": "🇫🇷",
+    "Spain": "🇪🇸",
+    "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",  # Bandera de Inglaterra
+    "Germany": "🇩🇪",
+    "Portugal": "🇵🇹",
+    "Italy": "🇮🇹",
+    "Netherlands": "🇳🇱",
+    "Belgium": "🇧🇪",
+    "Croatia": "🇭🇷",
+    "Denmark": "🇩🇰",
+    "Switzerland": "🇨🇭",
+    "Norway": "🇳🇴",
+    "Austria": "🇦🇹",
+    "Sweden": "🇸🇪",
+    "Poland": "🇵🇱",
+    "Serbia": "🇷🇸",
+    "Turkey": "🇹🇷",
+    "Ukraine": "🇺🇦",
+    "Czech Republic": "🇨🇿",
+    "Greece": "🇬🇷",
+    "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",  # Bandera de Escocia
+    "Wales": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",      # Bandera de Gales
+    "Iceland": "🇮🇸",
+    "Hungary": "🇭🇺",
+    "Israel": "🇮🇱",
+    "Argentina": "🇦🇷",
+    "Brazil": "🇧🇷",
+    "Colombia": "🇨🇴",
+    "Uruguay": "🇺🇾",
+    "Chile": "🇨🇱",
+    "Ecuador": "🇪🇨",
+    "Paraguay": "🇵🇾",
+    "Peru": "🇵🇪",
+    "Bolivia": "🇧🇴",
+    "Venezuela": "🇻🇪",
+    "Senegal": "🇸🇳",
+    "Morocco": "🇲🇦",
+    "Tunisia": "🇹🇳",
+    "Ghana": "🇬🇭",
+    "Egypt": "🇪🇬",
+    "Ivory Coast": "🇨🇮",
+    "Nigeria": "🇳🇬",
+    "Cameroon": "🇨🇲",
+    "South Africa": "🇿🇦",
+    "Algeria": "🇩🇿",
+    "Mexico": "🇲🇽",
+    "USA": "🇺🇸",
+    "Canada": "🇨🇦",
+    "Costa Rica": "🇨🇷",
+    "Panama": "🇵🇦",
+    "Jamaica": "🇯🇲",
+    "Japan": "🇯🇵",
+    "Korea": "🇰🇷",
+    "Australia": "🇦🇺",
+    "Saudi Arabia": "🇸🇦",
+    "Iran": "🇮🇷",
+    "Qatar": "🇶🇦",
+    "New Zealand": "🇳🇿",
 }
+
+# ---------------------------------------------------------------------------
+# MAPA DE CÓDIGOS DE PAÍS (para fallback en Streamlit Cloud)
+# ---------------------------------------------------------------------------
+COUNTRY_CODES = {
+    "France": "FR", "Spain": "ES", "England": "ENG", "Germany": "DE",
+    "Portugal": "PT", "Italy": "IT", "Netherlands": "NL", "Belgium": "BE",
+    "Croatia": "HR", "Denmark": "DK", "Switzerland": "CH", "Norway": "NO",
+    "Austria": "AT", "Sweden": "SE", "Poland": "PL", "Serbia": "RS",
+    "Turkey": "TR", "Ukraine": "UA", "Czech Republic": "CZ", "Greece": "GR",
+    "Scotland": "SCO", "Wales": "WAL", "Iceland": "IS", "Hungary": "HU",
+    "Israel": "IL", "Argentina": "AR", "Brazil": "BR", "Colombia": "CO",
+    "Uruguay": "UY", "Chile": "CL", "Ecuador": "EC", "Paraguay": "PY",
+    "Peru": "PE", "Bolivia": "BO", "Venezuela": "VE", "Senegal": "SN",
+    "Morocco": "MA", "Tunisia": "TN", "Ghana": "GH", "Egypt": "EG",
+    "Ivory Coast": "CI", "Nigeria": "NG", "Cameroon": "CM", "South Africa": "ZA",
+    "Algeria": "DZ", "Mexico": "MX", "USA": "US", "Canada": "CA",
+    "Costa Rica": "CR", "Panama": "PA", "Jamaica": "JM", "Japan": "JP",
+    "Korea": "KR", "Australia": "AU", "Saudi Arabia": "SA", "Iran": "IR",
+    "Qatar": "QA", "New Zealand": "NZ"
+}
+
+# ---------------------------------------------------------------------------
+# FUNCIÓN PARA MOSTRAR BANDERAS DE MANERA SEGURA EN STREAMLIT
+# ---------------------------------------------------------------------------
+def get_flag_display(country_name, show_code=True):
+    """
+    Devuelve la bandera y/o código del país para mostrar en Streamlit
+    
+    Args:
+        country_name (str): Nombre del país
+        show_code (bool): Si True, muestra también el código de país
+    
+    Returns:
+        str: Texto formateado con bandera y/o código
+    """
+    flag = FLAG_MAP.get(country_name, "")
+    code = COUNTRY_CODES.get(country_name, country_name[:3].upper())
+    
+    if show_code:
+        return f"{flag} {code}" if flag else f"{code}"
+    else:
+        return flag if flag else code
+
+# ---------------------------------------------------------------------------
+# FUNCIÓN PARA OBTENER URL DE BANDERA (OPCIÓN CON IMÁGENES)
+# ---------------------------------------------------------------------------
+def get_flag_url(country_name, size=40):
+    """
+    Devuelve URL de imagen de bandera de flagcdn.com
+    
+    Args:
+        country_name (str): Nombre del país
+        size (int): Tamaño de la imagen (ancho en píxeles)
+    
+    Returns:
+        str: URL de la imagen o string vacío si no encuentra
+    """
+    code = COUNTRY_CODES.get(country_name, "").lower()
+    # Convertir códigos especiales
+    if code == "eng":
+        code = "gb-eng"
+    elif code == "sco":
+        code = "gb-sct"
+    elif code == "wal":
+        code = "gb-wls"
+    
+    if code:
+        return f"https://flagcdn.com/w{size}/{code}.png"
+    return ""
