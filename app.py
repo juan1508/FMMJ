@@ -8,7 +8,7 @@ from itertools import combinations
 from data import (
     UEFA_TEAMS, CONMEBOL_TEAMS, CAF_TEAMS, CONCACAF_TEAMS, AFC_TEAMS,
     PLAYOFF_TEAMS, PLAYERS, FLAG_MAP, INITIAL_FIFA_RANKING,
-    ALL_TEAMS, COPA_AMERICA_GUESTS_POOL
+    ALL_TEAMS, COPA_AMERICA_GUESTS_POOL, COUNTRY_CODES, get_flag_url
 )
 from state import (
     init_state, flag, flag_img, flag_url, compute_standings,
@@ -24,7 +24,7 @@ st.set_page_config(
 )
 
 # ══════════════════════════════════════════════
-# ESTILOS GLOBALES
+# ESTILOS GLOBALES (se mantiene igual)
 # ══════════════════════════════════════════════
 st.markdown("""
 <style>
@@ -272,36 +272,47 @@ hr { border-color: var(--border) !important; }
 init_state()
 
 # ══════════════════════════════════════════════
-# HELPERS
+# HELPERS CORREGIDOS PARA BANDERAS
 # ══════════════════════════════════════════════
 
-def fl(team):
+def get_flag_code(team):
+    """Obtiene el código ISO para la bandera"""
+    code = COUNTRY_CODES.get(team, "").lower()
+    # Convertir códigos especiales para flagcdn.com
+    if code == "eng":
+        return "gb-eng"
+    elif code == "sco":
+        return "gb-sct"
+    elif code == "wal":
+        return "gb-wls"
+    return code
+
+def fl(team, size=20):
     """Devuelve img bandera inline HTML"""
-    code = FLAG_MAP.get(team, "")
+    code = get_flag_code(team)
     if not code:
         return ""
-    return f'<img src="https://flagcdn.com/20x15/{code}.png" style="vertical-align:middle;border-radius:2px;margin-right:5px;">'
+    return f'<img src="https://flagcdn.com/{size}x15/{code}.png" style="vertical-align:middle;border-radius:2px;margin-right:5px;">'
 
 def fl_text(team):
     """Bandera + nombre en texto plano para selectbox"""
     return team  # selectbox no soporta HTML
 
-def fl_big(team, size="40x30"):
-    code = FLAG_MAP.get(team, "")
+def fl_big(team, width=40):
+    """Bandera grande"""
+    code = get_flag_code(team)
     if not code:
         return ""
-    return f'<img src="https://flagcdn.com/{size}/{code}.png" style="vertical-align:middle;border-radius:3px;">'
+    return f'<img src="https://flagcdn.com/{width}x30/{code}.png" style="vertical-align:middle;border-radius:3px;">'
 
 POS_COLOR = {"GK":"#F0A500","DF":"#2196F3","MF":"#4CAF50","FW":"#F44336"}
-
 
 def standings_df(standings, highlight=0, repechaje_pos=None):
     rows = []
     for s in standings:
         pos = s["pos"]
         team = s["team"]
-        code = FLAG_MAP.get(team, "")
-        flag_html = f'<img src="https://flagcdn.com/16x12/{code}.png" style="vertical-align:middle;border-radius:1px;"> ' if code else ""
+        flag_html = fl(team, 16)
         if pos <= highlight:
             estado = "✅ Clasifica"
         elif repechaje_pos and pos == repechaje_pos:
@@ -330,10 +341,8 @@ def render_standings(standings, title="", highlight=0, repechaje_pos=None):
 
 
 def render_match_result(t1, t2, res):
-    code1 = FLAG_MAP.get(t1, "")
-    code2 = FLAG_MAP.get(t2, "")
-    img1 = f'<img src="https://flagcdn.com/24x18/{code1}.png" style="vertical-align:middle;border-radius:2px;">' if code1 else ""
-    img2 = f'<img src="https://flagcdn.com/24x18/{code2}.png" style="vertical-align:middle;border-radius:2px;">' if code2 else ""
+    img1 = fl(t1, 24)
+    img2 = fl(t2, 24)
 
     if res is None:
         st.markdown(
@@ -360,9 +369,8 @@ def render_match_result(t1, t2, res):
 
 def match_input_form(prefix, t1, t2, players_t1, players_t2, key_suffix=""):
     key_base = f"{prefix}_{t1}_{t2}_{key_suffix}"
-    code1 = FLAG_MAP.get(t1, ""); code2 = FLAG_MAP.get(t2, "")
-    img1 = f'<img src="https://flagcdn.com/20x15/{code1}.png" style="vertical-align:middle;border-radius:2px;">' if code1 else ""
-    img2 = f'<img src="https://flagcdn.com/20x15/{code2}.png" style="vertical-align:middle;border-radius:2px;">' if code2 else ""
+    img1 = fl(t1, 20)
+    img2 = fl(t2, 20)
     label = f"{img1} {t1}  🆚  {img2} {t2}"
     with st.expander(f"✏️ {t1} vs {t2}", expanded=False):
         col1, col2 = st.columns(2)
@@ -434,8 +442,7 @@ def knockout_input(prefix, t1, t2, players_t1, players_t2, allow_draw=False):
 
 
 def champ_banner(team, title="CAMPEÓN"):
-    code = FLAG_MAP.get(team, "")
-    img = f'<img src="https://flagcdn.com/80x60/{code}.png" style="border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.5);">' if code else ""
+    img = fl_big(team, 80)
     st.markdown(f"""
     <div class='champ-banner'>
       {img}
@@ -456,15 +463,14 @@ def conf_header(color, emoji, name, info=""):
 
 
 def team_chip(team, color="var(--g)"):
-    code = FLAG_MAP.get(team, "")
-    img = f'<img src="https://flagcdn.com/16x12/{code}.png" style="vertical-align:middle;border-radius:1px;margin-right:4px;">' if code else ""
+    img = fl(team, 16)
     return (f'<span style="display:inline-flex;align-items:center;background:rgba(0,0,0,.3);'
             f'border:1px solid {color}40;border-radius:20px;padding:3px 10px;font-size:12px;margin:2px;">'
             f'{img}{team}</span>')
 
 
 # ══════════════════════════════════════════════
-# SIDEBAR
+# SIDEBAR (se mantiene igual)
 # ══════════════════════════════════════════════
 with st.sidebar:
     st.markdown("""
@@ -566,13 +572,12 @@ if page == "🏠 Inicio":
     cols = st.columns(5)
     for col, (name, key, color) in zip(cols, CUPS):
         cv = st.session_state.get(key)
-        code = FLAG_MAP.get(cv, "") if cv else ""
-        flag_html = f'<img src="https://flagcdn.com/32x24/{code}.png" style="border-radius:3px;margin-bottom:4px;">' if code else ""
+        img = fl_big(cv, 32) if cv else ""
         with col:
             st.markdown(f"""
             <div class='card' style='border-top:3px solid {color};text-align:center;padding:16px 10px;'>
               <div style='font-size:11px;color:{color};letter-spacing:2px;margin-bottom:6px;'>{name}</div>
-              {'<div>'+flag_html+'</div><div style="font-weight:700;font-size:13px;color:#FFD700;">🏆 '+cv+'</div>' if cv
+              {'<div>'+img+'</div><div style="font-weight:700;font-size:13px;color:#FFD700;">🏆 '+cv+'</div>' if cv
                else "<div style='color:var(--muted);font-size:12px;margin-top:8px;'>⏳ En curso</div>"}
             </div>""", unsafe_allow_html=True)
 
@@ -582,8 +587,7 @@ if page == "🏠 Inicio":
         teams = st.session_state.wc_qualified
         html = "<div style='display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;'>"
         for t in teams:
-            code = FLAG_MAP.get(t, "")
-            img = f'<img src="https://flagcdn.com/24x18/{code}.png" style="vertical-align:middle;border-radius:2px;margin-right:5px;">' if code else ""
+            img = fl(t, 24)
             html += f'<div class="card" style="padding:8px 12px;display:inline-flex;align-items:center;gap:4px;">{img}<span style="font-size:13px;font-weight:600;">{t}</span></div>'
         html += "</div>"
         st.markdown(html, unsafe_allow_html=True)
