@@ -588,8 +588,9 @@ elif page == "\U0001F30D UEFA \u00B7 Eurocopa":
 
     with tab_setup:
         st.markdown("#### Selecciona y arma los 6 grupos (4 equipos c/u)")
+        _euro_default = [t for t in (st.session_state.euro_teams or UEFA_TEAMS[:24]) if t in UEFA_TEAMS]
         selected = st.multiselect("Elige 24 equipos UEFA", UEFA_TEAMS,
-                                  default=st.session_state.euro_teams or UEFA_TEAMS[:24], max_selections=24)
+                          default=_euro_default, max_selections=24)
         if len(selected) == 24:
             st.session_state.euro_teams = selected
             st.markdown("---")
@@ -600,7 +601,7 @@ elif page == "\U0001F30D UEFA \u00B7 Eurocopa":
             for i, gl in enumerate(group_labels):
                 with cols[i % 3]:
                     st.markdown(f"**Grupo {gl}**")
-                    default_g = st.session_state.euro_groups.get(gl, selected[i*4:(i+1)*4])
+                    default_g = [t for t in st.session_state.euro_groups.get(gl, selected[i*4:(i+1)*4]) if t in selected]
                     chosen = st.multiselect(f"Grupo {gl}", selected, default=default_g,
                                             max_selections=4, key=f"euro_grp_{gl}")
                     new_groups[gl] = chosen
@@ -2110,7 +2111,7 @@ elif page == "\U0001F465 Plantillas":
     total = len(players)
     pos_counts = {}
     for p in players:
-        pos_counts[p["position"]] = pos_counts.get(p["position"], 0) + 1
+        pos_counts[p["pos"]] = pos_counts.get(p["pos"], 0) + 1
 
     ranking_pts = st.session_state.fifa_ranking.get(team_sel, "\u2014")
 
@@ -2141,7 +2142,7 @@ elif page == "\U0001F465 Plantillas":
             ["Todas", "GK", "DF", "MF", "FW"],
             horizontal=True,
         )
-        filtered = [p for p in players if pos_filt == "Todas" or p["position"] == pos_filt]
+        filtered = [p for p in players if pos_filt == "Todas" or p["pos"] == pos_filt]
 
         # Position icons
         POS_ICON = {"GK": "\U0001F9E4", "DF": "\U0001F6E1\uFE0F", "MF": "\u26A1", "FW": "\U0001F525"}
