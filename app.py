@@ -8,7 +8,7 @@ from itertools import combinations
 from data import (
     UEFA_TEAMS, CONMEBOL_TEAMS, CAF_TEAMS, CONCACAF_TEAMS, AFC_TEAMS,
     PLAYOFF_TEAMS, PLAYERS, FLAG_MAP, INITIAL_FIFA_RANKING,
-    ALL_TEAMS, COPA_AMERICA_GUESTS_POOL, COUNTRY_CODES, get_flag_url
+    ALL_TEAMS, COPA_AMERICA_GUESTS_POOL, COUNTRY_CODES, get_flag_url  # IMPORTANTE: agregamos COUNTRY_CODES
 )
 from state import (
     init_state, flag, flag_img, flag_url, compute_standings,
@@ -272,11 +272,11 @@ hr { border-color: var(--border) !important; }
 init_state()
 
 # ══════════════════════════════════════════════
-# HELPERS CORREGIDOS PARA BANDERAS
+# FUNCIONES CORREGIDAS PARA BANDERAS
 # ══════════════════════════════════════════════
 
 def get_flag_code(team):
-    """Obtiene el código ISO para la bandera"""
+    """Obtiene el código ISO para la bandera usando COUNTRY_CODES de data.py"""
     code = COUNTRY_CODES.get(team, "").lower()
     # Convertir códigos especiales para flagcdn.com
     if code == "eng":
@@ -306,6 +306,10 @@ def fl_big(team, width=40):
     return f'<img src="https://flagcdn.com/{width}x30/{code}.png" style="vertical-align:middle;border-radius:3px;">'
 
 POS_COLOR = {"GK":"#F0A500","DF":"#2196F3","MF":"#4CAF50","FW":"#F44336"}
+
+# ══════════════════════════════════════════════
+# FUNCIONES AUXILIARES (standings_df, render_standings, render_match_result, etc.)
+# ══════════════════════════════════════════════
 
 def standings_df(standings, highlight=0, repechaje_pos=None):
     rows = []
@@ -468,7 +472,6 @@ def team_chip(team, color="var(--g)"):
             f'border:1px solid {color}40;border-radius:20px;padding:3px 10px;font-size:12px;margin:2px;">'
             f'{img}{team}</span>')
 
-
 # ══════════════════════════════════════════════
 # SIDEBAR (se mantiene igual)
 # ══════════════════════════════════════════════
@@ -608,7 +611,6 @@ if page == "🏠 Inicio":
                 del st.session_state[k]
             init_state()
             st.rerun()
-
 # ══════════════════════════════════════════════
 # EUROCOPA
 # ══════════════════════════════════════════════
