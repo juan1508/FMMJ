@@ -7,8 +7,8 @@ from data import (
 )
 
 st.set_page_config(
-    page_title="MMJ Tournament Hub",
-    page_icon="⚽",
+    page_title="MMJ Streamlit League",
+    page_icon="fmmj.png",   # ← cambia esto
     layout="wide",
     initial_sidebar_state="expanded"
 )
